@@ -9,7 +9,9 @@ import { getPokedex } from "../services/pokemon-service";
 export default function Dashboard() {
   const [isLoading, setIsLoading] = useState<Boolean>(true);
 
-  const urlPokedex = "https://pokeapi.co/api/v2/pokemon?offset=0&limit=9";
+  const [urlPokedex, setUrlPokedex] = useState<string>(
+    "https://pokeapi.co/api/v2/pokemon?offset=0&limit=9"
+  );
 
   const [pokedexList, setPokedexList] = useState<Pokedex>();
 
@@ -22,7 +24,9 @@ export default function Dashboard() {
     }
 
     getPokedexData();
-  }, []);
+  }, [urlPokedex]);
+
+  const [currentPage, setCurrentPage] = useState<number>(1);
 
   return (
     <main className="flex justify-center">
@@ -49,11 +53,22 @@ export default function Dashboard() {
                     <span className="capitalize font-bold pb-4">
                       {pokemon.name}
                     </span>
+                    <div className="grid grid-cols-2 text-left pb-4">
+                      {pokemon.types.map((type, index) => {
+                        return (
+                          <span className="capitalize px-3" key={index}>
+                            {type.type.name}
+                          </span>
+                        );
+                      })}
+                    </div>
                     <div className="text-left pb-4">
                       {pokemon.stats.map((stat, index) => {
                         return (
                           <div key={index}>
-                            {stat.stat.name}: {stat.base_stat}
+                            <span className="capitalize">
+                              {stat.stat.name}: {stat.base_stat}
+                            </span>
                           </div>
                         );
                       })}
@@ -66,6 +81,39 @@ export default function Dashboard() {
                   </div>
                 );
               })}
+            </div>
+            <div className="grid grid-cols-3">
+              {pokedexList.previous ? (
+                <button
+                  className="bg-blue-900 p-2 rounded m-4"
+                  onClick={() => {
+                    setUrlPokedex(pokedexList.previous);
+                    setCurrentPage(currentPage - 1);
+                  }}
+                >
+                  <span className="text-yellow-500 font-semibold">
+                    Previous
+                  </span>
+                </button>
+              ) : (
+                <div></div>
+              )}
+              <span className="text-black m-4">
+                {currentPage} of {(pokedexList.count / 9).toFixed(0)}
+              </span>
+              {pokedexList.next ? (
+                <button
+                  className="bg-blue-900 p-2 rounded m-4"
+                  onClick={() => {
+                    setUrlPokedex(pokedexList.next);
+                    setCurrentPage(currentPage + 1);
+                  }}
+                >
+                  <span className="text-yellow-500 font-semibold">Next</span>
+                </button>
+              ) : (
+                <div></div>
+              )}
             </div>
           </>
         )}
