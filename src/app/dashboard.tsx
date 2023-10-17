@@ -1,12 +1,12 @@
 "use client";
 
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { Pokedex } from "../models/pokemon-model";
-import { getPokedex } from "../services/pokemon-service";
+import { Pokedex } from "./models/pokemon-model";
+import { getPokedex } from "./services/pokemon-service";
 
 export default function Dashboard() {
+  const router = useRouter();
   const [isLoading, setIsLoading] = useState<Boolean>(true);
 
   const [urlPokedex, setUrlPokedex] = useState<string>(
@@ -53,27 +53,10 @@ export default function Dashboard() {
                     <span className="capitalize font-bold pb-4">
                       {pokemon.name}
                     </span>
-                    <div className="grid grid-cols-2 text-left pb-4">
-                      {pokemon.types.map((type, index) => {
-                        return (
-                          <span className="capitalize px-3" key={index}>
-                            {type.type.name}
-                          </span>
-                        );
-                      })}
-                    </div>
-                    <div className="text-left pb-4">
-                      {pokemon.stats.map((stat, index) => {
-                        return (
-                          <div key={index}>
-                            <span className="capitalize">
-                              {stat.stat.name}: {stat.base_stat}
-                            </span>
-                          </div>
-                        );
-                      })}
-                    </div>
-                    <button className="bg-blue-900 p-2 rounded">
+                    <button
+                      className="bg-blue-900 p-2 rounded"
+                      onClick={() => router.push(`detail/${pokemon.id}`)}
+                    >
                       <span className="text-yellow-500 font-semibold">
                         Show Details
                       </span>
@@ -82,7 +65,7 @@ export default function Dashboard() {
                 );
               })}
             </div>
-            <div className="grid grid-cols-3">
+            <div className="grid grid-cols-3 items-center">
               {pokedexList.previous ? (
                 <button
                   className="bg-blue-900 p-2 rounded m-4"
