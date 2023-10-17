@@ -17,10 +17,12 @@ export default function Dashboard() {
 
   useEffect(() => {
     async function getPokedexData() {
-      getPokedex(urlPokedex).then(async (result) => {
-        setPokedexList(result);
-        setIsLoading(false);
-      });
+      getPokedex(urlPokedex)
+        .then(async (result) => {
+          setPokedexList(result);
+          setIsLoading(false);
+        })
+        .catch(() => router.push("/404"));
     }
 
     getPokedexData();

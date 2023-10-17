@@ -16,10 +16,12 @@ export default function Detail({ params }: { params: { id: string } }) {
 
   useEffect(() => {
     async function getPokemonDetail() {
-      getPokemon(urlPokemon).then(async (result) => {
-        setPokemon(result);
-        setIsLoading(false);
-      });
+      getPokemon(urlPokemon)
+        .then(async (result) => {
+          setPokemon(result);
+          setIsLoading(false);
+        })
+        .catch(() => router.push("/404"));
     }
 
     getPokemonDetail();
